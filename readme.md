@@ -5,7 +5,7 @@ Client: Abraham Annor
 
 ## Addin A New User
 To add a new user, send a post request to this endpoint
-```
+```js
 http://localhost:8100/api/users; 
 
 <!-- requset body -->
