@@ -6,11 +6,9 @@ Client: Abraham Annor
 
 
 ### Adding A New User
-To add a new user, send a `POST` request to this endpoint
+To add a new user, send a `POST` request to this endpoint `http://localhost:8100/api/users`
 ```js
-  http://localhost:8100/api/users; 
-
-  <!-- requset body -->
+  // requset body 
   {
     fullName: "Ssadiq Roy",
     email: "ssadiq@mymail.com",
@@ -24,10 +22,8 @@ replace `http://localhost:8100` to your domain. Example `https://mydomain.com`
 
 
 ### Loging In
-To Log in send a `POST` request to this endpoint
+To Log in send a `POST` request to this endpoint `http://localhost:8100/api/users/login`
 ```js
-  http://localhost:8100/api/users/login
-
   // requset body
   {
     username: "ssadiqroy",
@@ -148,7 +144,7 @@ To get all users, send a `GET` request to `http://localhost:8100/api/users`.
 ### Get One Particular User
 To your password, send a `GET` request to `http://localhost:8100/api/users/[userId]`. 
 ```js
-  http://localhost:8100/api/users/669d3b7f48e18c7cb9ee6d68
+  // http://localhost:8100/api/users/669d3b7f48e18c7cb9ee6d68
 
   // Request Body
   {

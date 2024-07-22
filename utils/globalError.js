@@ -31,6 +31,6 @@ function validationError(error) {
   return new AppError(message, 405, { textCode: 'DB_FIELD_VALIDATION' });
 }
 
-function jwtExpiryError(error) {
+function jwtExpiryError() {
   return new AppError('You have been logged out. Please log in again', 417);
 }
