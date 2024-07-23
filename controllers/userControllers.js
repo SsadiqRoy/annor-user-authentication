@@ -42,6 +42,7 @@ exports.login = catchAsync(async (req, res, next) => {
     httpOnly: true,
     secure: true,
     domain: process.env.COOKIE_DOMAIN,
+    sameSie: 'none',
   };
 
   const manualCookie = {
