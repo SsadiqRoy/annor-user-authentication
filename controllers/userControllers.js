@@ -1,11 +1,11 @@
-const { promisify } = require('node:util');
+const { promisify } = require("node:util");
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const User = require('../models/userModel');
-const AppError = require('../utils/classes/AppError');
-const { catchAsync } = require('../utils/utilities');
+const User = require("../models/userModel");
+const AppError = require("../utils/classes/AppError");
+const { catchAsync } = require("../utils/utilities");
 
 exports.newUser = catchAsync(async (req, res, next) => {
   const { fullName, email, username, studentId, password } = req.body;
@@ -15,7 +15,7 @@ exports.newUser = catchAsync(async (req, res, next) => {
   const user = await User.create(body);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     message: `New user ${user.fullName} added`,
     data: user,
   });
@@ -26,11 +26,13 @@ exports.newUser = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { username, password, studentId } = req.body;
 
-  const user = await User.findOne({ username, studentId }).select('+password');
-  if (!user) return next(new AppError('No account found', 404, { textCode: 'NOT_FOUND' }));
+  const user = await User.findOne({ username, studentId }).select("+password");
+  if (!user) return next(new AppError("No account found", 404, { textCode: "NOT_FOUND" }));
 
   const correctPassword = await bcrypt.compare(password, user.password);
-  if (!correctPassword) return next(new AppError('Incorrect Credentials. Please check your credentials', 406));
+  // console.log(correctPassword, password, user.password)
+
+  if (!correctPassword) return next(new AppError("Incorrect Credentials. Please check your credentials", 406));
 
   const token = await promisify(jwt.sign)({ id: user.id }, process.env.JWT_SECRET, {
     expiresIn: +process.env.JWT_DURATION,
@@ -42,7 +44,7 @@ exports.login = catchAsync(async (req, res, next) => {
     httpOnly: true,
     secure: true,
     domain: process.env.COOKIE_DOMAIN,
-    sameSie: 'none',
+    sameSie: "none",
   };
 
   const manualCookie = {
@@ -51,13 +53,13 @@ exports.login = catchAsync(async (req, res, next) => {
     cookieOptions,
   };
 
-  res.set('manual-cookie', JSON.stringify(manualCookie));
+  res.set("manual-cookie", JSON.stringify(manualCookie));
   res.cookie(process.env.COOKIE_NAME, token, cookieOptions);
 
   const newuser = await User.findById(user.id);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     message: `Welcome back ${user.fullName}`,
     data: newuser,
   });
@@ -79,19 +81,19 @@ exports.logout = catchAsync(async (req, res, next) => {
     cookieOptions,
   };
 
-  res.set('manual-cookie', JSON.stringify(manualCookie));
+  res.set("manual-cookie", JSON.stringify(manualCookie));
   res.cookie(process.env.COOKIE_NAME, null, cookieOptions);
 
   res.status(200).json({
-    status: 'success',
-    message: 'You are now logged out',
+    status: "success",
+    message: "You are now logged out",
   });
 });
 
 //
 
 exports.isLoggedIn = catchAsync(async (req, res, next) => {
-  res.status(200).json({ status: 'success', data: req.user });
+  res.status(200).json({ status: "success", data: req.user });
 });
 
 //
@@ -104,8 +106,8 @@ exports.update = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.user.id, body, { runValidators: true, new: true });
 
   res.status(200).json({
-    status: 'success',
-    message: 'Account details updated',
+    status: "success",
+    message: "Account details updated",
     data: user,
   });
 });
@@ -115,10 +117,10 @@ exports.update = catchAsync(async (req, res, next) => {
 exports.changePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, newPassword } = req.body;
 
-  const user = await User.findById(req.user.id).select('+password');
+  const user = await User.findById(req.user.id).select("+password");
 
   const correctPassword = await bcrypt.compare(currentPassword, user.password);
-  if (!correctPassword) return next(new AppError('Current Password is incorrect', 406));
+  if (!correctPassword) return next(new AppError("Current Password is incorrect", 406));
 
   user.password = newPassword;
   await user.save();
@@ -126,7 +128,7 @@ exports.changePassword = catchAsync(async (req, res, next) => {
   const newuser = await User.findById(user.id);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     message: `Password successfully changed`,
     data: newuser,
   });
@@ -138,7 +140,7 @@ exports.allUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     length: users.length,
     data: users,
   });
@@ -150,7 +152,7 @@ exports.oneUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: user,
   });
 });

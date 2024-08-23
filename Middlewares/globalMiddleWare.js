@@ -7,7 +7,7 @@ const User = require('../models/userModel');
 exports.onlyLoggedIn = catchAsync(async (req, res, next) => {
   const cookie = req.cookies[process.env.COOKIE_NAME];
 
-  if (!cookie) return next(new AppError('Your are not logged in', 401, { textCode: 'UNAUTHORIZED' }));
+  if (!cookie) return next(new AppError('You are not logged in', 401, { textCode: 'UNAUTHORIZED' }));
 
   const token = await promisify(jwt.verify)(cookie, process.env.JWT_SECRET);
 
